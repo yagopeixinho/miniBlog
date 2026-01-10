@@ -1,0 +1,6 @@
+@MB.Api_HostAddress = http://localhost:5192
+
+GET {{MB.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

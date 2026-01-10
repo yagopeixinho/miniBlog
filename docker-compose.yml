@@ -1,0 +1,36 @@
+version: "3.9"
+
+services:
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: miniblog-sql
+    environment:
+      SA_PASSWORD: "SenhaForte@123"
+      ACCEPT_EULA: "Y"
+    ports:
+      - "1433:1433"
+    volumes:
+      - sqlserver_data:/var/opt/mssql
+    restart: unless-stopped
+
+  mb.api:
+    image: mbapi
+    container_name: miniblog-api
+    build:
+      context: .
+      dockerfile: MB.Api/Dockerfile
+    depends_on:
+      - sqlserver
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ConnectionStrings__DefaultConnection: >
+        Server=sqlserver,1433;
+        Database=MiniBlogDb;
+        User Id=sa;
+        Password=SenhaForte@123;
+        TrustServerCertificate=True
+    ports:
+      - "5000:8080"
+
+volumes:
+  sqlserver_data:
