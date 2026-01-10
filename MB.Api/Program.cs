@@ -1,4 +1,8 @@
 using MB.Infrastructure.Data;
+using MB.Infrastructure.Repositories;
+using MB.Manager.Implementation;
+using MB.Manager.Interfaces.Manager;
+using MB.Manager.Interfaces.Repositories;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -12,6 +16,9 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddScoped<IBlogPostRepository, BlogPostRepository>();
+builder.Services.AddScoped<IBlogPostManager, BlogPostManager>();
 
 var app = builder.Build();
 
