@@ -1,6 +1,6 @@
 ﻿using MB.Core.Entities;
 
-namespace MB.Manager.Interfaces.Repositories;
+namespace MB.Core.Interfaces.Repositories;
 
 public interface IBlogPostCommentRepository
 {

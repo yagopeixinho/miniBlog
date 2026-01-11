@@ -1,19 +1,16 @@
-﻿using MB.Manager.DTO.Requests;
-using MB.Manager.Interfaces.Manager;
+﻿using MB.Api.Configuration;
+using MB.Core.DTO.Requests;
+using MB.Core.Interfaces.Manager;
+using MB.Manager.DTO.Requests;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MB.Api.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class CommentController : ApiControllerBase
+public class CommentController(IBlogPostCommentManager commentManager) : ApiControllerBase
 {
-    private readonly IBlogPostCommentManager _blogPostCommentManager;
-
-    public CommentController(IBlogPostCommentManager productManager)
-    {
-        _blogPostCommentManager = productManager ?? throw new ArgumentNullException(nameof(productManager));
-    }
+    private readonly IBlogPostCommentManager _commentManager = commentManager ?? throw new ArgumentNullException(nameof(commentManager));
 
     [HttpPost("{postId}/comments")]
     public async Task<ApiResponse<ReturnCommentDTO>> CreateComment(
@@ -22,23 +19,24 @@ public class CommentController : ApiControllerBase
     {
         if (!ModelState.IsValid)
         {
-            var errors = ModelState.Values
-                .SelectMany(v => v.Errors)
-                .Select(e => e.ErrorMessage)
-                .ToList();
-
-            return ApiResponse.Fail<ReturnCommentDTO>("Dados inválidos", errors);
+            return ApiResponse.Fail<ReturnCommentDTO>(
+                "Dados inválidos",
+                [.. ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage)]
+            );
         }
 
         try
         {
-            var comment = await _blogPostCommentManager.CreateAsync(postId, request);
+            var comment = await _commentManager.CreateAsync(postId, request);
             return ApiResponse.Success(comment, "Comentário criado com sucesso");
         }
         catch (Exception ex)
         {
-            return ApiResponse.Fail<ReturnCommentDTO>(ex.Message);
+            Console.Error.WriteLine(ex);
+
+            return ApiResponse.Fail<ReturnCommentDTO>(
+                "Houve um problema ao criar o comentário. Tente novamente mais tarde."
+            );
         }
     }
-
 }

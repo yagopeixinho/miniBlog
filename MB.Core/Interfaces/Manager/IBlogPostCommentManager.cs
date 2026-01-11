@@ -1,13 +1,11 @@
-﻿using MB.Manager.DTO.Requests;
-using MB.Manager.DTO.Responses;
+﻿using MB.Core.DTO.Requests;
+using MB.Manager.DTO.Requests;
 
-namespace MB.Manager.Interfaces.Manager;
+namespace MB.Core.Interfaces.Manager;
 
 public interface IBlogPostCommentManager
 {
     Task<ReturnCommentDTO> CreateAsync(
         int postId,
         ReturnCommentDto request);
-
-
 }

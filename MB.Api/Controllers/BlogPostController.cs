@@ -1,61 +1,58 @@
-﻿using MB.Manager.DTO.Requests;
-using MB.Manager.DTO.Responses;
-using MB.Manager.Interfaces.Manager;
+﻿using MB.Api.Configuration;
+using MB.Core.DTO.Responses;
+using MB.Core.Interfaces.Manager;
+using MB.Manager.DTO.Requests;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MB.Api.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class BlogPostController : ApiControllerBase
+public class BlogPostController(IBlogPostManager blogPostManager) : ApiControllerBase
 {
-    private readonly IBlogPostManager _blogPostManager;
+    private readonly IBlogPostManager _blogPostManager = blogPostManager ?? throw new ArgumentNullException(nameof(blogPostManager));
 
-    public BlogPostController(IBlogPostManager productManager)
-    {
-        _blogPostManager = productManager ?? throw new ArgumentNullException(nameof(productManager));
-    }
-    
     [HttpGet]
-    public async Task<ApiResponse<List<ReturnBlogPostDTO>>> GetAllPosts()
+    public async Task<ApiResponse<List<ReturnBlogPostListDTO>>> GetAllPosts()
     {
-        var user = await _blogPostManager.GetAllPosts();
-        return user is not null
-            ? ApiResponse.Success(user)
-            : ApiResponse.Fail<List<ReturnBlogPostDTO>>("Usuário não encontrado");
+        var posts = await _blogPostManager.GetAllPosts();
+        return posts is not null
+            ? ApiResponse.Success(posts)
+            : ApiResponse.Fail<List<ReturnBlogPostListDTO>>("Nenhum post encontrado");
     }
-
 
     [HttpGet("{id:int}")]
     public async Task<ApiResponse<ReturnBlogPostDTO>> GetByIdAsync(int id)
     {
-        var user = await _blogPostManager.GetByIdAsync(id);
-        return user is not null
-            ? ApiResponse.Success(user)
-            : ApiResponse.Fail<ReturnBlogPostDTO>("Usuário não encontrado");
+        var post = await _blogPostManager.GetByIdAsync(id);
+        return post is not null
+            ? ApiResponse.Success(post)
+            : ApiResponse.Fail<ReturnBlogPostDTO>("Post não encontrado");
     }
 
     [HttpPost]
-    public async Task<ApiResponse<ReturnBlogPostDTO>> CreateBlogPostAsync([FromBody] CreateBlogPostDto newProduct)
+    public async Task<ApiResponse<ReturnBlogPostDTO>> CreateBlogPostAsync([FromBody] CreateBlogPostDto newPost)
     {
         if (!ModelState.IsValid)
         {
-            var errors = ModelState.Values
-                .SelectMany(v => v.Errors)
-                .Select(e => e.ErrorMessage)
-                .ToList();
-
-            return ApiResponse.Fail<ReturnBlogPostDTO>("Dados inválidos", errors);
+            return ApiResponse.Fail<ReturnBlogPostDTO>(
+                "Dados inválidos",
+                [.. ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage)]
+            );
         }
 
         try
         {
-            var createdProduct = await _blogPostManager.CreateAsync(newProduct);
-            return ApiResponse.Success(createdProduct, "Publicagem criada com sucesso");
+            var createdPost = await _blogPostManager.CreateAsync(newPost);
+            return ApiResponse.Success(createdPost, "Post criado com sucesso");
         }
         catch (Exception ex)
         {
-            return ApiResponse.Fail<ReturnBlogPostDTO>("Houve um problema ao criar novo usuário.");
+            Console.Error.WriteLine(ex);
+
+            return ApiResponse.Fail<ReturnBlogPostDTO>(
+                "Houve um problema ao criar o post. Tente novamente mais tarde."
+            );
         }
     }
 }

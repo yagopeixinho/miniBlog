@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-namespace MB.Api;
+namespace MB.Api.Configuration;
 public static class ApiBehaviorConfiguration
 {
     public static IServiceCollection ConfigureApiBehavior(this IServiceCollection services)

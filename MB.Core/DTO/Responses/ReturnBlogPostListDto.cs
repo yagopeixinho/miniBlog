@@ -2,11 +2,10 @@
 
 namespace MB.Core.DTO.Responses;
 
-public class ReturnBlogPostDTO
+public class ReturnBlogPostListDTO
 {
     public int Id { get; set; }
     public string Title { get; set; }
     public string Content { get; set; }
     public int CommentsCount { get; set; }
-    public List<ReturnCommentDTO> Comments { get; set; } = new();
 }

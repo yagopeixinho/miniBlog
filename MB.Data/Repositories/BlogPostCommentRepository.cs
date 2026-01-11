@@ -1,19 +1,18 @@
 ﻿using MB.Core.Entities;
+using MB.Core.Interfaces.Repositories;
 using MB.Infrastructure.Data;
-using MB.Manager.Interfaces.Repositories;
 
 namespace MB.Infrastructure.Repositories;
 
-public class BlogPostCommentRepository : IBlogPostCommentRepository
+public class BlogPostCommentRepository(BlogDbContext context) : IBlogPostCommentRepository
 {
-    private readonly BlogDbContext _context;
+    private readonly BlogDbContext _context = context ?? throw new ArgumentNullException(nameof(context));
 
-    public BlogPostCommentRepository(BlogDbContext context)
-    {
-        _context = context;
-    }
     public async Task AddAsync(Comment comment)
     {
+        if (comment is null)
+            throw new ArgumentNullException(nameof(comment));
+
         await _context.Comment.AddAsync(comment);
         await _context.SaveChangesAsync();
     }

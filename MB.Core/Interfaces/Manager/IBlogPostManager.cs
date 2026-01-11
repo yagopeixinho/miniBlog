@@ -1,12 +1,11 @@
-﻿using MB.Manager.DTO.Requests;
-using MB.Manager.DTO.Responses;
+﻿using MB.Core.DTO.Responses;
+using MB.Manager.DTO.Requests;
 
-namespace MB.Manager.Interfaces.Manager;
+namespace MB.Core.Interfaces.Manager;
 
 public interface IBlogPostManager
 {
-    Task<List<ReturnBlogPostDTO>> GetAllPosts();
+    Task<List<ReturnBlogPostListDTO>> GetAllPosts();
     Task<ReturnBlogPostDTO> GetByIdAsync(int id);
     Task<ReturnBlogPostDTO> CreateAsync(CreateBlogPostDto request);
-
 }

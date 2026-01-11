@@ -3,11 +3,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace MB.Infrastructure.Data;
 
-public class BlogDbContext : DbContext
+public class BlogDbContext(DbContextOptions<BlogDbContext> options) : DbContext(options)
 {
-    public BlogDbContext(DbContextOptions<BlogDbContext> options) : base(options)
-    { }
-
     public DbSet<BlogPost> BlogPost { get; set; }
     public DbSet<Comment> Comment { get; set; }
 }
