@@ -15,7 +15,7 @@ public class BlogPostManager : IBlogPostManager
         _repository = repository;
     }
 
-    public async Task<ReturnBlogPostDTO[]> GetAllPosts()
+    public async Task<List<ReturnBlogPostDTO>> GetAllPosts()
     {
         var posts = await _repository.GetAllPostsAsync();
 
@@ -23,7 +23,8 @@ public class BlogPostManager : IBlogPostManager
             .Select(p => new ReturnBlogPostDTO
             {
                 Title = p.Title,
-                Content = p.Content
+                Content = p.Content,
+                CommentsCount = p.Comments?.Count ?? 0
             })];
     }
 
@@ -35,6 +36,11 @@ public class BlogPostManager : IBlogPostManager
         {
             Title = user.Title,
             Content = user.Content,
+            Comments = user.Comments.Select(c => new ReturnCommentDTO
+            {
+                Id = c.Id,
+                Text = c.Text
+            }).ToList()
         };
     }
 

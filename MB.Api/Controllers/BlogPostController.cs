@@ -15,14 +15,14 @@ public class BlogPostController : ApiControllerBase
     {
         _blogPostManager = productManager ?? throw new ArgumentNullException(nameof(productManager));
     }
-
+    
     [HttpGet]
-    public async Task<ApiResponse<ReturnBlogPostDTO[]>> GetAllPosts()
+    public async Task<ApiResponse<List<ReturnBlogPostDTO>>> GetAllPosts()
     {
         var user = await _blogPostManager.GetAllPosts();
         return user is not null
             ? ApiResponse.Success(user)
-            : ApiResponse.Fail<ReturnBlogPostDTO[]>("Usuário não encontrado");
+            : ApiResponse.Fail<List<ReturnBlogPostDTO>>("Usuário não encontrado");
     }
 
 

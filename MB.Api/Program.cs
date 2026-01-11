@@ -20,6 +20,9 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<IBlogPostRepository, BlogPostRepository>();
 builder.Services.AddScoped<IBlogPostManager, BlogPostManager>();
 
+builder.Services.AddScoped<IBlogPostCommentRepository, BlogPostCommentRepository>();
+builder.Services.AddScoped<IBlogPostCommentManager, BlogPostCommentManager>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

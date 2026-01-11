@@ -17,13 +17,16 @@ public class BlogPostRepository : IBlogPostRepository
     public async Task<IReadOnlyList<BlogPost>> GetAllPostsAsync()
     {
         return await _context.BlogPost
+            .Include(p => p.Comments)
             .AsNoTracking()
             .ToListAsync();
     }
 
     public async Task<BlogPost> GetByIdAsync(int id)
     {
-        return await _context.BlogPost.FirstOrDefaultAsync(u => u.Id == id);
+        return await _context.BlogPost
+            .Include(p => p.Comments)
+            .FirstOrDefaultAsync(u => u.Id == id);
     }
 
     public async Task AddAsync(BlogPost blogPost)

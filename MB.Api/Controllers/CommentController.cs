@@ -1,5 +1,4 @@
 ﻿using MB.Manager.DTO.Requests;
-using MB.Manager.DTO.Responses;
 using MB.Manager.Interfaces.Manager;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,15 +8,17 @@ namespace MB.Api.Controllers;
 [Route("api/[controller]")]
 public class CommentController : ApiControllerBase
 {
-    private readonly IBlogPostManager _blogPostManager;
+    private readonly IBlogPostCommentManager _blogPostCommentManager;
 
-    public CommentController(IBlogPostManager productManager)
+    public CommentController(IBlogPostCommentManager productManager)
     {
-        _blogPostManager = productManager ?? throw new ArgumentNullException(nameof(productManager));
+        _blogPostCommentManager = productManager ?? throw new ArgumentNullException(nameof(productManager));
     }
 
-    [HttpPost]
-    public async Task<ApiResponse<ReturnBlogPostDTO>> CreateBlogPostComment([FromBody] CreateBlogPostDto newProduct)
+    [HttpPost("{postId}/comments")]
+    public async Task<ApiResponse<ReturnCommentDTO>> CreateComment(
+        int postId,
+        [FromBody] ReturnCommentDto request)
     {
         if (!ModelState.IsValid)
         {
@@ -26,17 +27,18 @@ public class CommentController : ApiControllerBase
                 .Select(e => e.ErrorMessage)
                 .ToList();
 
-            return ApiResponse.Fail<ReturnBlogPostDTO>("Dados inválidos", errors);
+            return ApiResponse.Fail<ReturnCommentDTO>("Dados inválidos", errors);
         }
 
         try
         {
-            var createdProduct = await _blogPostManager.CreateAsync(newProduct);
-            return ApiResponse.Success(createdProduct, "Publicagem criada com sucesso");
+            var comment = await _blogPostCommentManager.CreateAsync(postId, request);
+            return ApiResponse.Success(comment, "Comentário criado com sucesso");
         }
         catch (Exception ex)
         {
-            return ApiResponse.Fail<ReturnBlogPostDTO>("Houve um problema ao criar novo usuário.");
+            return ApiResponse.Fail<ReturnCommentDTO>(ex.Message);
         }
     }
+
 }

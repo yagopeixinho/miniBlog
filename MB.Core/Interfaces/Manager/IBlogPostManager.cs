@@ -5,7 +5,7 @@ namespace MB.Manager.Interfaces.Manager;
 
 public interface IBlogPostManager
 {
-    Task<ReturnBlogPostDTO[]> GetAllPosts();
+    Task<List<ReturnBlogPostDTO>> GetAllPosts();
     Task<ReturnBlogPostDTO> GetByIdAsync(int id);
     Task<ReturnBlogPostDTO> CreateAsync(CreateBlogPostDto request);
 
