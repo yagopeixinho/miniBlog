@@ -1,4 +1,4 @@
-﻿<div align="center">
+<div align="center">
      <img src="./readmeIcon.png" width="230px" />
 </div>
 
@@ -104,7 +104,7 @@ dotnet ef database update
 
 > Se ocorrerem problemas durante o processo de migração, uma solução comum é excluir a pasta _Migrations_ e recriar as migrações novamente.
 
-Após seguir esses passos, seu ambiente estará configurado e pronto para gerenciar os dados dos usuários no People.
+Após seguir esses passos, seu ambiente estará configurado e pronto.
 
 ## Como rodar o projeto?
 
