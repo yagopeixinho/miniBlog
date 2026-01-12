@@ -129,7 +129,7 @@ uma escalabilidade mais eficiente.
 
 **MB.Core**: Contém as entidades e a lógica de negócio. Define modelos como BlogPost e Comment e interfaces dos serviços.
 
-**MB.Infrastructure**: Responsável pela persistência de dados. Contém os repositórios que interagem com o banco e implementações de acesso a dados.
+**MB.Data**: Responsável pela persistência de dados. Contém os repositórios que interagem com o banco e implementações de acesso a dados.
 
 **MB.Manager**: Implementa a lógica de negócios, validando regras, transformando dados e chamando os repositórios.
 
